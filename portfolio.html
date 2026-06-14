@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yash Kumar Singh Jadon — Embedded Systems Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --bg2: #0d1117;
+    --bg3: #111827;
+    --bg4: #1a2235;
+    --border: rgba(0,210,180,0.12);
+    --border2: rgba(0,210,180,0.25);
+    --accent: #00d4b4;
+    --accent2: #0088ff;
+    --accent3: #ff6b35;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --muted2: #94a3b8;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Grid background */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,180,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,180,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    background: rgba(6,8,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo span { color: var(--muted); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted2);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* MAIN */
+  main { position: relative; z-index: 1; }
+
+  section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 56px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  .hero-name {
+    font-family: var(--mono);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.35s forwards;
+  }
+
+  .hero-name .accent { color: var(--accent); }
+
+  .hero-title {
+    font-family: var(--mono);
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--muted2);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.5s forwards;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--muted2);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.65s forwards;
+  }
+
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.8s forwards;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.95s forwards;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--bg);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 10px 24px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover { background: transparent; color: var(--accent); }
+
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--border2);
+    padding: 10px 24px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); background: rgba(0,212,180,0.05); }
+
+  /* Terminal blinker */
+  .blink {
+    display: inline-block;
+    width: 10px; height: 1.1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blink 1.1s step-end infinite;
+  }
+
+  /* SECTION HEADERS */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3rem;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .skill-card {
+    background: var(--bg2);
+    padding: 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .skill-card:hover { background: var(--bg3); }
+
+  .skill-category {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+  }
+
+  .tag.hot { color: var(--accent); border-color: rgba(0,212,180,0.3); }
+
+  /* EXPERIENCE */
+  .exp-card {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 2rem;
+    position: relative;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .exp-card:hover { border-color: var(--border2); }
+
+  .exp-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .exp-role {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .exp-company {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
+
+  .exp-bullets {
+    list-style: none;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .exp-bullets li {
+    font-size: 14px;
+    color: var(--muted2);
+    padding-left: 1.2rem;
+    position: relative;
+  }
+
+  .exp-bullets li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 10px;
+    top: 3px;
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .project-card {
+    background: var(--bg2);
+    padding: 1.75rem;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .project-card:hover { background: var(--bg3); }
+
+  .project-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+  }
+
+  .project-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--muted2);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 0.5rem;
+  }
+
+  .project-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    background: rgba(0,212,180,0.07);
+    border: 1px solid rgba(0,212,180,0.2);
+    padding: 2px 8px;
+  }
+
+  .project-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+  }
+
+  .project-link:hover { color: var(--accent); }
+
+  .project-link svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* OPEN SOURCE badge */
+  .badge-os {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--accent3);
+    border: 1px solid rgba(255,107,53,0.3);
+    background: rgba(255,107,53,0.07);
+    padding: 2px 7px;
+    letter-spacing: 0.1em;
+  }
+
+  /* AI CHAT */
+  #chat-section {
+    max-width: 820px;
+  }
+
+  .chat-container {
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    position: relative;
+  }
+
+  .chat-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chat-header-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .chat-header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+
+  .chat-header-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .chat-messages {
+    height: 360px;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    scroll-behavior: smooth;
+  }
+
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  .msg {
+    display: flex;
+    gap: 12px;
+    max-width: 90%;
+  }
+
+  .msg.user { flex-direction: row-reverse; align-self: flex-end; }
+
+  .msg-avatar {
+    width: 32px; height: 32px;
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .msg-avatar.ai { background: rgba(0,212,180,0.1); color: var(--accent); border: 1px solid var(--border2); }
+  .msg-avatar.user-av { background: rgba(0,136,255,0.1); color: var(--accent2); border: 1px solid rgba(0,136,255,0.25); }
+
+  .msg-bubble {
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+  }
+
+  .msg.ai .msg-bubble { background: var(--bg3); color: var(--text); }
+  .msg.user .msg-bubble { background: rgba(0,136,255,0.08); border-color: rgba(0,136,255,0.2); color: var(--text); }
+
+  .msg-bubble a { color: var(--accent); }
+
+  .chat-suggestions {
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    border-top: 1px solid var(--border);
+  }
+
+  .suggestion-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted2);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .suggestion-btn:hover { color: var(--accent); border-color: var(--border2); }
+
+  .chat-input-row {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+
+  .chat-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 1rem 1.5rem;
+    outline: none;
+  }
+
+  .chat-input::placeholder { color: var(--muted); }
+
+  .chat-send {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,180,0.07);
+    border: none;
+    border-left: 1px solid var(--border);
+    padding: 0 1.5rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.2s;
+  }
+
+  .chat-send:hover { background: rgba(0,212,180,0.15); }
+
+  .typing-indicator {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    padding: 0 0 0 44px;
+  }
+
+  .typing-indicator span {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: typing 1s infinite;
+    opacity: 0.4;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* CONTACT */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .contact-item {
+    background: var(--bg2);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .contact-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+
+  .contact-value {
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .contact-value a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  @keyframes typing {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 1rem; }
+    .nav-links { gap: 1rem; }
+    section { padding: 4rem 1rem; }
+    .hero-name { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">yash<span>@embedded</span>:~$</div>
+  <ul class="nav-links">
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#experience">exp</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#chat-section">ai_chat</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow">// EMBEDDED SYSTEMS DEVELOPER</div>
+  <h1 class="hero-name">Yash Kumar<br><span class="accent">Singh Jadon</span><span class="blink"></span></h1>
+  <div class="hero-title">UAV Systems · GPS Modules · Flight Controllers</div>
+  <p class="hero-desc">
+    Building the firmware and hardware that makes drones fly. STM32, ESP32, ArduPilot, ROS2, PCB design — from schematic to sky.
+  </p>
+  <div class="hero-status">
+    <span class="status-dot"></span>
+    Currently @ Sooryauday Aerial Vehicles — Faridabad, IN
+  </div>
+  <div class="hero-ctas">
+    <a href="#projects" class="btn-primary">View Projects</a>
+    <a href="#chat-section" class="btn-ghost">Ask AI About Me</a>
+    <a href="mailto:singhyashthakur29@gmail.com" class="btn-ghost">Get In Touch</a>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label fade-in">01 // TECHNICAL SKILLS</div>
+  <h2 class="section-title fade-in">What I work with</h2>
+  <div class="skills-grid fade-in">
+    <div class="skill-card">
+      <div class="skill-category">LANGUAGES</div>
+      <div class="skill-tags">
+        <span class="tag hot">C</span>
+        <span class="tag hot">C++</span>
+        <span class="tag hot">Python</span>
+        <span class="tag">QML</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">EMBEDDED PLATFORMS</div>
+      <div class="skill-tags">
+        <span class="tag hot">STM32</span>
+        <span class="tag hot">ESP32</span>
+        <span class="tag">ARM Cortex-M</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">RTOS & FIRMWARE</div>
+      <div class="skill-tags">
+        <span class="tag hot">FreeRTOS</span>
+        <span class="tag hot">ArduPilot</span>
+        <span class="tag">PX4</span>
+        <span class="tag">Betaflight</span>
+        <span class="tag">INAV</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">PROTOCOLS & SENSORS</div>
+      <div class="skill-tags">
+        <span class="tag hot">UART</span>
+        <span class="tag hot">SPI</span>
+        <span class="tag hot">I2C</span>
+        <span class="tag">GPS/NMEA/UBX</span>
+        <span class="tag">IMU ICM-20948</span>
+        <span class="tag">PWM</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">HARDWARE & TOOLS</div>
+      <div class="skill-tags">
+        <span class="tag hot">KiCad</span>
+        <span class="tag hot">PCB Design</span>
+        <span class="tag">STM32CubeIDE</span>
+        <span class="tag">Soldering/SMD</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-category">ROBOTICS & SIM</div>
+      <div class="skill-tags">
+        <span class="tag hot">ROS2</span>
+        <span class="tag">Gazebo</span>
+        <span class="tag">Qt/QML</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label fade-in">02 // EXPERIENCE</div>
+  <h2 class="section-title fade-in">Where I've worked</h2>
+
+  <div class="exp-card fade-in">
+    <div class="exp-header">
+      <div>
+        <div class="exp-role">Assistant Engineer</div>
+        <div class="exp-company">Sooryauday Aerial Vehicles Pvt. Ltd.</div>
+      </div>
+      <div class="exp-date">June 2024 – Present</div>
+    </div>
+    <ul class="exp-bullets">
+      <li>Designed a custom GPS module using STM32, NEO-M9N, and ICM-20948 IMU — stable GNSS lock and reliable heading data for UAV flight operations.</li>
+      <li>Built a lightweight flight controller on ESP32 for sub-250g drones with FreeRTOS real-time task scheduling.</li>
+      <li>Integrated Betaflight and INAV firmware for autonomous and semi-autonomous flight modes.</li>
+      <li>Designed a Thrust Testing Rig to quantify motor max thrust and RPM under varying load conditions.</li>
+      <li>Integrated ArduPilot airspeed telemetry into the company GCS using Qt and QML for real-time monitoring.</li>
+      <li>Built a Python SHA-256 encryption tool for protecting sensitive flight configuration and telemetry data.</li>
+      <li>Assembled complete drone systems — motor, ESC, FC, and sensor integration — from frame to flight-ready.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label fade-in">03 // PROJECTS</div>
+  <h2 class="section-title fade-in">Things I've built</h2>
+  <div class="projects-grid fade-in">
+
+    <div class="project-card">
+      <span class="badge-os">OPEN SOURCE</span>
+      <div class="project-type">HARDWARE · GPS MODULE</div>
+      <div class="project-name">Orion1 — GPS Breakout (NEO-M9N)</div>
+      <div class="project-desc">
+        First prototype compact GPS breakout board built around the u-blox NEO-M9N. Battery-backed coin cell for RTC/almanac retention, dual-layer PCB, status LEDs, and full Gerber + BOM for direct manufacturing.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">KiCad</span>
+        <span class="project-tag">NEO-M9N</span>
+        <span class="project-tag">PCB Design</span>
+        <span class="project-tag">CERN-OHL-W</span>
+      </div>
+      <a class="project-link" href="https://github.com/kanha2907/Gps-using-neom9n-" target="_blank">
+        github.com/kanha2907/Gps-using-neom9n-
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+    <div class="project-card">
+      <span class="badge-os">OPEN SOURCE</span>
+      <div class="project-type">SOFTWARE · SECURITY TOOL</div>
+      <div class="project-name">ArduSecureManager</div>
+      <div class="project-desc">
+        GUI tool for managing secure ArduPilot firmware — generate Ed25519 keys, build custom bootloaders, sign and flash with challenge-response USB auth. Supports 150+ ArduPilot boards. Once flashed, the board permanently rejects unsigned firmware.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">Tkinter</span>
+        <span class="project-tag">Ed25519</span>
+        <span class="project-tag">ArduPilot</span>
+        <span class="project-tag">pyserial</span>
+      </div>
+      <a class="project-link" href="https://github.com/kanha2907/ArduSecureManager" target="_blank">
+        github.com/kanha2907/ArduSecureManager
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+    <div class="project-card">
+      <span class="badge-os">OPEN SOURCE</span>
+      <div class="project-type">AI / COMPUTER VISION</div>
+      <div class="project-name">Real-Time Object Detector (YOLOv3)</div>
+      <div class="project-desc">
+        Real-time object detection pipeline trained on COCO dataset (80 classes). OpenCV DNN backend — no heavy ML framework needed. Supports image, video, and live webcam inference.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">Python</span>
+        <span class="project-tag">YOLOv3</span>
+        <span class="project-tag">OpenCV</span>
+        <span class="project-tag">COCO</span>
+      </div>
+      <a class="project-link" href="https://github.com/kanha2907/detector" target="_blank">
+        github.com/kanha2907/detector
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">FIRMWARE · RTOS</div>
+      <div class="project-name">FreeRTOS Sensor Fusion — IMU + GPS + Barometer</div>
+      <div class="project-desc">
+        Real-time sensor fusion on STM32 using FreeRTOS. Integrated ICM-20948 IMU, NEO-M9N GPS, and BMP/MS5611 barometer via Kalman/complementary filter. 200 Hz update rate with Queue Scheduler and Binary Semaphores for concurrent tasks.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">STM32</span>
+        <span class="project-tag">FreeRTOS</span>
+        <span class="project-tag">C</span>
+        <span class="project-tag">Kalman Filter</span>
+        <span class="project-tag">ICM-20948</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">HARDWARE · FLIGHT CONTROLLER</div>
+      <div class="project-name">ESP32 Sub-250g Flight Controller</div>
+      <div class="project-desc">
+        Compact flight controller for sub-250g drone class on ESP32. Sensor fusion, motor control, and FreeRTOS task management for stable flight. Designed from scratch — custom PCB and firmware.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">ESP32</span>
+        <span class="project-tag">FreeRTOS</span>
+        <span class="project-tag">C++</span>
+        <span class="project-tag">PCB Design</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">SOFTWARE · GUI</div>
+      <div class="project-name">Crop Health Monitoring GCS</div>
+      <div class="project-desc">
+        Cross-platform desktop application in Qt/QML for UAV systems. Real-time telemetry display, spray zone mapping, and mission control for precision agriculture operations.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">Qt</span>
+        <span class="project-tag">QML</span>
+        <span class="project-tag">Python</span>
+        <span class="project-tag">UAV</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">SIMULATION · ROBOTICS</div>
+      <div class="project-name">Rocket FPV Drone — ROS2 + Gazebo</div>
+      <div class="project-desc">
+        Simulating a high-speed Rocket FPV drone in Gazebo for an upcoming company project. Implementing flight dynamics, motor thrust modeling, and sensor integration within the ROS2 ecosystem.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">ROS2</span>
+        <span class="project-tag">Gazebo</span>
+        <span class="project-tag">Python</span>
+        <span class="project-tag">C++</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-type">HARDWARE · MAPPING</div>
+      <div class="project-name">3D Terrain Mapping — QGIS + Drone</div>
+      <div class="project-desc">
+        Generate 3D topographic maps and elevation models using drone-acquired imagery processed in QGIS. Full workflow documented for reproducibility — RTK/PPK for high-accuracy georeferencing.
+      </div>
+      <div class="project-stack">
+        <span class="project-tag">QGIS</span>
+        <span class="project-tag">Drone</span>
+        <span class="project-tag">RTK/PPK</span>
+        <span class="project-tag">GIS</span>
+      </div>
+      <a class="project-link" href="https://github.com/kanha2907/3D-mapping-using-qgis" target="_blank">
+        github.com/kanha2907/3D-mapping-using-qgis
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- AI CHAT -->
+<section id="chat-section">
+  <div class="section-label fade-in">04 // AI ASSISTANT</div>
+  <h2 class="section-title fade-in">Ask me anything</h2>
+  <div class="chat-container fade-in">
+    <div class="chat-header">
+      <div class="chat-header-dot"></div>
+      <span class="chat-header-label">YASH_AI — PORTFOLIO ASSISTANT</span>
+      <span class="chat-header-sub">powered by claude</span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg ai">
+        <div class="msg-avatar ai">AI</div>
+        <div class="msg-bubble">
+          Hey! I'm an AI assistant that knows everything about Yash's work — his projects, skills, experience at Sooryauday Aerial Vehicles, and open-source tools. Ask me anything, or try a suggestion below.
+        </div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typingIndicator">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="chat-suggestions">
+      <button class="suggestion-btn" onclick="askSuggestion('Tell me about the Orion1 GPS module and its improvements in v2')">Orion1 GPS project →</button>
+      <button class="suggestion-btn" onclick="askSuggestion('What does ArduSecureManager do and why is it useful for drone security?')">ArduSecureManager →</button>
+      <button class="suggestion-btn" onclick="askSuggestion('What embedded systems experience does Yash have?')">Embedded skills →</button>
+      <button class="suggestion-btn" onclick="askSuggestion('What flight controller firmware has Yash worked with?')">Firmware stack →</button>
+      <button class="suggestion-btn" onclick="askSuggestion('Is Yash available for hire or collaboration?')">Availability →</button>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Ask about Yash's projects, skills, or experience..." />
+      <button class="chat-send" onclick="sendMessage()">SEND →</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label fade-in">05 // CONTACT</div>
+  <h2 class="section-title fade-in">Get in touch</h2>
+  <div class="contact-grid fade-in">
+    <div class="contact-item">
+      <div class="contact-label">EMAIL</div>
+      <div class="contact-value"><a href="mailto:singhyashthakur29@gmail.com">singhyashthakur29@gmail.com</a></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-label">PHONE</div>
+      <div class="contact-value">+91 83680 88753</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-label">LOCATION</div>
+      <div class="contact-value">Faridabad, Haryana 121006</div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-label">GITHUB</div>
+      <div class="contact-value"><a href="https://github.com/kanha2907" target="_blank">github.com/kanha2907</a></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>// Yash Kumar Singh Jadon · Embedded Systems Developer · Built with purpose</p>
+</footer>
+
+<script>
+const SYSTEM_PROMPT = `You are an AI assistant embedded in Yash Kumar Singh Jadon's portfolio website. You know everything about Yash and answer questions about him in a helpful, concise, and enthusiastic way. Keep answers under 120 words. Use plain text only — no markdown, no bullet symbols. If asked about availability, say he is open to interesting opportunities in embedded systems and UAV.
+
+About Yash:
+- Name: Yash Kumar Singh Jadon
+- Role: Embedded Systems Developer, UAV & Drone Systems
+- Location: Faridabad, Haryana, India
+- Email: singhyashthakur29@gmail.com
+- Phone: +91-8368088753
+- Education: B.Tech Electronics & Communication Engineering, IIMT College of Engineering, Greater Noida (APJ Abdul Kalam Technical University), 2020–2024
+
+Current Job: Assistant Engineer at Sooryauday Aerial Vehicles Pvt. Ltd. (June 2024 – Present)
+- Designed custom GPS module: STM32 + NEO-M9N + ICM-20948 IMU
+- Built ESP32 flight controller for sub-250g drones with FreeRTOS
+- Integrated Betaflight and INAV on flight controllers
+- Designed Thrust Testing Rig for motor characterization
+- Integrated ArduPilot airspeed data into company GCS using Qt/QML
+- Built SHA-256 encryption tool for protecting flight telemetry
+- Full drone assembly: motor, ESC, FC, sensor integration
+
+Skills: C, C++, Python, QML, STM32, ESP32, ARM Cortex-M, FreeRTOS, ArduPilot, PX4, Betaflight, INAV, ROS2, Gazebo, Qt, KiCad, PCB Design, UART, SPI, I2C, PWM, GPS (NMEA/UBX), IMU ICM-20948, SMD soldering, Git, STM32CubeIDE
+
+Projects:
+1. Orion1 (GPS Breakout) - First prototype compact GPS board using u-blox NEO-M9N, battery backed, dual-layer PCB, KiCad, open source CERN-OHL-W. GitHub: github.com/kanha2907/Gps-using-neom9n- . V2 improved to 4-layer PCB, added MAX2655 LNA, USB-C, I2C, RTK support, UAV payload connector, separated power domains.
+2. ArduSecureManager - Python/Tkinter GUI tool that locks ArduPilot flight controllers so they only accept Ed25519-signed firmware. Challenge-response USB auth, 150+ boards supported. GitHub: github.com/kanha2907/ArduSecureManager
+3. YOLOv3 Object Detector - Real-time object detection on COCO dataset (80 classes) using OpenCV DNN, pure Python. GitHub: github.com/kanha2907/detector
+4. FreeRTOS Sensor Fusion - STM32 + ICM-20948 + NEO-M9N + BMP/MS5611, Kalman filter, 200Hz update, Queue Scheduler and Binary Semaphores.
+5. ESP32 Flight Controller - Custom compact FC for sub-250g drones, FreeRTOS, sensor fusion, motor control.
+6. Crop Health Monitoring GCS - Qt/QML desktop app, real-time telemetry, spray zone mapping, mission control for precision agriculture.
+7. Rocket FPV Drone Simulation - ROS2 + Gazebo, high-speed drone flight dynamics, motor thrust modeling.
+8. 3D Terrain Mapping - Drone imagery + QGIS, RTK/PPK georeferencing, topographic maps. GitHub: github.com/kanha2907/3D-mapping-using-qgis`;
+
+const conversationHistory = [];
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addMessage('user', text);
+  conversationHistory.push({ role: 'user', content: text });
+  showTyping(true);
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: conversationHistory
+      })
+    });
+    const data = await resp.json();
+    const reply = data.content?.[0]?.text || 'Sorry, I had trouble answering that. Try again!';
+    showTyping(false);
+    addMessage('ai', reply);
+    conversationHistory.push({ role: 'assistant', content: reply });
+  } catch (e) {
+    showTyping(false);
+    addMessage('ai', 'Network error — please try again.');
+  }
+}
+
+function askSuggestion(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function addMessage(role, text) {
+  const messages = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role === 'ai' ? 'ai' : 'user'}`;
+  div.innerHTML = `
+    <div class="msg-avatar ${role === 'ai' ? 'ai' : 'user-av'}">${role === 'ai' ? 'AI' : 'YOU'}</div>
+    <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
+  `;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+function showTyping(show) {
+  const t = document.getElementById('typingIndicator');
+  t.style.display = show ? 'flex' : 'none';
+  if (show) {
+    const messages = document.getElementById('chatMessages');
+    messages.scrollTop = messages.scrollHeight;
+  }
+}
+
+document.getElementById('chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
